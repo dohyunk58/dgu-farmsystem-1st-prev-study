@@ -11,6 +11,7 @@ on:
 env:
   EC2_SSH_USER: ubuntu
   DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/dgu-farmsystem
+  CONTAINER_NAME: dgu-farmsystem-container
 
 jobs:
   build:
@@ -53,7 +54,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: | # 도커 script, 이 컨테이너만 stop하도록 수정해야 함(컨테이너 ID 필요)
+          script: | # 도커 script
             CONTAINER_ID=$(sudo docker ps -q --filter "publish=80-8080")
             
             if [ ! -z "$CONTAINER_ID" ]; then
@@ -62,4 +63,4 @@ jobs:
             fi
             
             sudo docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
-            sudo docker run --name ${{ env.CONTAINER_NAME }} -d -p 80:8080 -e TZ=Asia/Seoul ${{ env.DOCKER_HUB }}
+            sudo docker run --name ${{ env.CONTAINER_NAME }} -d -p 80:8080 -e TZ=Asia/Seoul ${{ env.DOCKER_IMAGE_NAME }}:latest
