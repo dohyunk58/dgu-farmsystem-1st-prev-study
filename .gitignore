@@ -40,3 +40,4 @@ out/
 
 ### 기타 ###
 application.properties
+application.yml
